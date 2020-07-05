@@ -33,4 +33,4 @@ async function main1() {
   console.timeEnd('2');
 }
 
-main1();
+main();

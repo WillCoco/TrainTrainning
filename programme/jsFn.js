@@ -153,3 +153,20 @@ const throttleFn = throttle(function () {
 
 // throttleFn();
 // setTimeout(throttleFn, 3000)
+
+function throttle(fn, ms) {
+  let timer;
+  let canExec = true;
+  return function() {
+    if (canExec) {
+      fn();
+      canExec = false;
+    }
+    if (timer) {
+      clearTimeout(timer)
+    }
+    timer = setTimeout(function() {
+      canExec = true;
+    }, ms);
+  }
+}

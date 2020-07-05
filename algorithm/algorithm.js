@@ -27,7 +27,7 @@ function bubbling(arr, isSmall2large) {
   return data;
 }
 
-console.log(bubbling(arr), 'bubbling sort');
+// console.log(bubbling(arr), 'bubbling sort');
 
 // 快速
 function quick (data, {t = 0} = {}) {
@@ -241,7 +241,7 @@ function nxBreadth(data) {
 // nxBreadth(tree2x);
 
 /**
- * 一步画完游戏，随机起点，走完所有方格
+ * 地图信息
  */
 const oneStepData2 = [
   [1, 1], [1, 2], [1, 3], [1, 4],
@@ -250,7 +250,13 @@ const oneStepData2 = [
   [4, 1], [4, 2], [4, 3], [4, 4]
 ];
 
-function findEnd(data, startIndex, isFindAll) {
+/**
+ * 寻找路径
+ * param: {object} data - 地图信息
+ * param: {number} startIndex - 起点
+ * param: {boolean} isFindAll - 是否找出全部路径
+ */
+function routing(data, startIndex, isFindAll) {
   const startStacks = [[...data[startIndex]]];
   const startData = [...data];
   startData.splice(startIndex, 1);
@@ -290,8 +296,8 @@ function findEnd(data, startIndex, isFindAll) {
 
   // 有效的相邻步
   function isValidStep(nowNode, nextNode) {
-    const firstDiff =  Math.abs(nowNode[0] - nextNode[0]);
-    const secondDiff =  Math.abs(nowNode[1] - nextNode[1]);
+    const firstDiff = Math.abs(nowNode[0] - nextNode[0]);
+    const secondDiff = Math.abs(nowNode[1] - nextNode[1]);
 
     return (
       (firstDiff === 1 && secondDiff === 0) || (firstDiff === 0 && secondDiff === 1)
@@ -312,3 +318,101 @@ function findEnd(data, startIndex, isFindAll) {
 // console.log(
 //   findEnd(oneStepData2, 10, false)
 // );
+
+
+/**
+ * 每次可选择+1或者+2， 累计加到n的所有可能
+ */
+const t = {
+  value: 0,
+  left: {
+    value: 1,
+      left: {
+        value: 2,
+      },
+      right: {
+        value: 3,
+      }
+  },
+  right: {
+    value: 2
+  }
+};
+
+function createTree(n) {
+  let times = 0;
+
+  let tree = {
+    value: 0
+  };
+
+  /**
+   * 根据条件往下延展树
+   */
+  function createNode(pNode) {
+    const leftValue = 1 + pNode.value;
+    const rightValue = 2 + pNode.value;
+
+    if (leftValue < n) {
+      pNode.left = createNode({value: leftValue});
+    }
+
+    if (rightValue < n) {
+      pNode.right = createNode({value: rightValue});
+    }
+
+    if (leftValue === n || rightValue === n) {
+      times++;
+    }
+
+    return pNode;
+  }
+
+  createNode(tree);
+
+  return times;
+}
+
+// const a = createTree();
+
+function createTree1(n) {
+  let times = 0;
+
+  let tree = {
+    value: 0
+  };
+
+  /**
+   * 根据条件往下延展树
+   */
+  function createNode(pNode) {
+    let current = pNode;
+    let parent;
+
+    while (true) {
+      if (pNode.value > n) {
+        break;
+      }
+
+
+      if (!current.left) {
+        current.left = {value: 1 + pNode.value};
+        console.log(current.left, 'left');
+        current = current.left;
+      } else if (!current.right) {
+        current.right = {value: 2 + pNode.value};
+        current = current.right;
+      }
+
+      parent = current
+
+    }
+  }
+
+  createNode(tree);
+
+  return times;
+}
+
+const b = createTree1(10);
+console.log(b, '所有可能');
